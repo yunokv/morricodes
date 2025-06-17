@@ -15,7 +15,6 @@
       position: relative;
     }
 
-    /* Watermark */
     body::before {
       content: '';
       position: fixed;
@@ -110,6 +109,13 @@
       overflow-x: auto;
     }
 
+    #productNameDisplay {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #000;
+    }
+
     #downloadBtn {
       background-color: #eee;
       cursor: pointer;
@@ -137,6 +143,7 @@
 
     <div class="barcode-box">
       <svg id="barcode"></svg>
+      <div id="productNameDisplay"></div>
     </div>
     <button id="downloadBtn" onclick="downloadBarcode()">Download as PNG</button>
   </div>
@@ -144,12 +151,14 @@
   <script>
     function generateBarcode() {
       const code = document.getElementById("productCode").value.trim();
-      const price = document.getElementById("price").value.trim();
+      const productName = document.getElementById("price").value.trim();
+
       if (!/^\d+$/.test(code)) {
         alert("Invalid product barcode. Numbers only.");
         return;
       }
-      const finalData = `92${code}0000${price.padStart(3, '0')}00027`;
+
+      const finalData = `92${code}000000000027`;
 
       JsBarcode("#barcode", finalData, {
         format: "CODE128",
@@ -158,8 +167,11 @@
         width: 2,
         height: 70,
         fontSize: 18,
-        margin: 10
+        margin: 10,
+        displayValue: true
       });
+
+      document.getElementById("productNameDisplay").innerText = productName ? `Product: ${productName}` : "";
     }
 
     function downloadBarcode() {
